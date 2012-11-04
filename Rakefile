@@ -1,7 +1,6 @@
 require 'sinatra'
 # Models
 require './models/scraper'
-require './models/section'
 require './models/course'
 require './models/department'
 require './models/book'
@@ -15,6 +14,11 @@ namespace :hooscron do
 	end
 
 	task :update_terms do
-		Term.update_terms
+		n = Time.now
+		if n.day == 15
+			Term.update_terms
+		else
+			print "Wrong day\n\n"
+		end
 	end
 end
