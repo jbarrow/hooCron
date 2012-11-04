@@ -1,6 +1,8 @@
-development:
+production:
   sessions:
     default:
       database: hoosCron
       hosts:
-        - localhost:27017
+        - alex.mongohq.com:10056/app8967670
+      user: jbarrow
+      password: password
