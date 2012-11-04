@@ -34,7 +34,7 @@ class Scraper
 	end
 
 	def scrape url
-		print "Scraping URL: " + url
+		print "Scraping URL: " + url + "\n"
 		Crack::XML.parse(RestClient.get(url))
 	end
 
