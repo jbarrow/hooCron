@@ -35,3 +35,7 @@ get '/course/:course' do
 	content_type :json
 	Book.where(course_id: params[:course]).to_json(except: :_id)
 end
+
+get '/' do
+	Term.new().save
+end
