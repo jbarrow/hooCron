@@ -1,3 +1,13 @@
+GIT
+  remote: git@github.com:mongoid/mongoid.git
+  revision: a536a5aab37027c4189829c78527035ed2da5f0c
+  specs:
+    mongoid (3.1.0)
+      activemodel (~> 3.1)
+      moped (~> 1.2)
+      origin (~> 1.0)
+      tzinfo (~> 0.3.22)
+
 GEM
   remote: http://rubygems.org/
   specs:
@@ -12,11 +22,6 @@ GEM
     hpricot (0.8.6)
     i18n (0.6.1)
     mime-types (1.19)
-    mongoid (3.0.10)
-      activemodel (~> 3.1)
-      moped (~> 1.1)
-      origin (~> 1.0)
-      tzinfo (~> 0.3.22)
     moped (1.2.7)
     multi_json (1.3.7)
     origin (1.0.10)
@@ -38,6 +43,6 @@ PLATFORMS
 DEPENDENCIES
   crack
   hpricot
-  mongoid
+  mongoid!
   rest-client
   sinatra

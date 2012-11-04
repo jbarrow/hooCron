@@ -5,8 +5,6 @@ require 'sinatra'
 require 'mongoid'
 # Returning Json
 require 'json'
-# Development gem.  Fun fact: not all too useful
-require "sinatra/reloader" if development?
 
 # Configuration
 configure do
