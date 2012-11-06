@@ -64,9 +64,9 @@ class Term
 		controls = { "campus" => campus_id, "term" => term_id }
 		url = scraper.format_complex_url controls
 		# Scrape the resulting URL
-		departments = scraper.scrape url
+		departments = scraper.scrape url, "departments"
 		# Insert them into the departments collection
-		departments["departments"]["department"].each do |department|
+		departments.each do |department|
 			# Pass the departments to the department model, which will then get the courses,
 			# => which will then get the sections, which will then get the books.
 			# => Convoluted?  Absolutely.  Necessary?  Unfortunately.

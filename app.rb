@@ -35,3 +35,27 @@ get '/course/:course' do
 	content_type :json
 	Book.where(course_id: params[:course]).to_json(except: :_id)
 end
+
+get '/search' do
+	# Returns the books of a given course based on search input
+	content_type :json
+	if params[:course] && params[:number]
+		if Course.where(dept_abrev: params[:course], number: params[:number]).count > 0
+			course = Course.where(dept_abrev: params[:course].upcase, number: params[:number].to_i).first 
+		else
+			course = Course.new( section_id: 0 )
+		end
+
+		return Book.where( course_id: course.section_id ).to_json
+	elsif params[:instructor]
+		if Course.where( instructor: params[:instructor].capitalize ).count > 0
+			course = Course.where( instructor: params[:instructor].capitalize ).first
+		else
+			course = Course.new( section_id: 0 )
+		end
+
+		return Book.where( course_id: course.section_id ).to_json
+	end
+
+	return Book.new.to_json
+end

@@ -15,6 +15,7 @@ class Course
 	field :term, type: String
 	field :term_id, type: Integer
 	field :department, type: String
+	field :dept_abrev, type: String
 	field :department_id, type: Integer
 	field :number, type: Integer
 	field :section, type: String
