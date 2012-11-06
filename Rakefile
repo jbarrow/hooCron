@@ -14,11 +14,11 @@ namespace :hooscron do
 	end
 
 	task :update_terms do
-		#n = Time.now
-		#if n.day == 15
+		n = Time.now
+		if n.day == 15
 			Term.update_terms
-		#else
-		#	print "Wrong day\n\n"
-		#end
+		else
+			print "Wrong day\n\n"
+		end
 	end
 end
