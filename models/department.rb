@@ -13,30 +13,9 @@ require 'hpricot'
 require 'pp'
 
 class Department
-	include Mongoid::Document
-
-	# Department information
-	field :department_id, type: Integer
-	field :term, type: String
-	field :abrev, type: String
-	field :name, type: String
-	field :term_id, type: Integer
 
 	# Here we take in a department hash and a term object.
 	def self.update_department department, term
-		# Create a new department if it doesn't already exist
-		if Department.where(department_id: department["id"]).count == 0
-			dept = Department.new( 
-				department_id: department["id"].to_i, 
-				term: term.name, 
-				term_id: term.term_id, 
-				name: format_name(department["name"]), 
-				abrev: department["abrev"] )
-			dept.save
-		else
-			dept = Department.where(department_id: department["id"]).first
-		end
-
 		# Pass if off to the course level
 		scraper = Scraper.new
 		controls = { "department" => "", "dept" => department["id"], "term" => term.term_id, "campus" => term.campus_id }
@@ -54,25 +33,16 @@ class Department
 			sections = scraper.scrape section_url, "sections"
 
 			sections.each do |section|
-				# So the deal with this is that Crack passes us back both arrays and hashes.  Why?
-				# => God knows.  But I do have to deal with it.  I'm going to look more into it soon,
-				# => and then ideally I'll be able to reformat this whole, beastly method.
-				if Course.where(section_id: section["id"]).count == 0
-					c = Course.new(
-						term: term.name, 
-						term_id: term.term_id, 
-						department: format_name(department["name"]),
-						department_id: department["id"],
-						number: course["name"].to_i,
-						section: section["name"],
-						section_id: section["id"],
-						instructor: section["instructor"].capitalize,
-						dept_abrev: department["abrev"]
-					)
-
-					c.save
-				end
-				Book.grab_books section["id"]
+				data = { 
+					term: term.name, term_id: term.term_id, 
+					department: format_name(department["name"]), department_id: department["id"],
+					course: course["name"].to_i, course_id: course["id"],
+					section: section["name"], section_id: section["id"],
+					instructor: section["instructor"].capitalize,
+					dept_abrev: department["abrev"],
+					campus_id: term.campus_id
+				}
+				Book.grab_books data
 			end
 		end
 

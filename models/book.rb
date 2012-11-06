@@ -20,29 +20,46 @@ class Book
 	field :isbn, type: String
 	field :price, type: String
 	field :author, type: String
-	field :required, type: String
-	field :copyright, type: String
 	field :publisher, type: String
+	field :copyright, type: String
+	# Book's data with relation to school.  Whether or not it is required, which department it's
+	# => from, and which course and section it belongs to, as well as the instructor
+	field :required, type: String
+	field :department, type: String
+	field :dept_abrev, type: String
+	field :course_number, type: String
+	field :section_number, type: String
+	field :instructor, type: String
+	field :term, type: String
+	# The associated book store information.  In the uva bookstore, each department, course, term,
+	# => campus, and section has a unique id.  This data is going to be stored in case
+	field :section_id, type: Integer
+	field :term_id, type: Integer
+	field :campus_id, type: Integer
+	field :department_id, type: Integer
 	field :course_id, type: Integer
 
-	def self.grab_books section_id
+	def self.grab_books data
 		scraper = Scraper.new
-		html = Net::HTTP.get(URI.parse(scraper.format_simple_url("section", section_id)))
+		html = Net::HTTP.get(URI.parse(scraper.format_simple_url("section", data[:section_id])))
+		print "Scraping URL: " + scraper.format_simple_url("section", data[:section_id]) + "\n"
 		doc = Hpricot(html)
 
 		if doc.search("//div[@class=error]").count == 0
 			book = Book.parse_book doc
 
-			if Book.where(isbn: book[:isbn], course_id: section_id).count == 0 && book[:title] != "No Text Required"
+			if Book.where(isbn: book[:isbn], section_id: data[:section_id]).count == 0 && book[:title] != "No Text Required"
 				book = Book.new(
-					title: book[:title],
-					author: book[:author],
-					isbn: book[:isbn],
-					required: book[:required],
-					price: book[:price],
-					copyright: book[:copyright],
-					publisher: book[:publisher],
-					course_id: section_id
+					# Book Data
+					title: book[:title], author: book[:author], isbn: book[:isbn], price: book[:price], 
+					copyright: book[:copyright], publisher: book[:publisher],
+					# Course Data
+					required: book[:required], department: data[:department], dept_abrev: data[:dept_abrev],
+					course_number: data[:course], section_number: data[:section], instructor: data[:instructor],
+					term: data[:term],
+					# Bookstore Data
+					section_id: data[:section_id], term_id: data[:term_id], campus_id: data[:campus_id],
+					department_id: data[:department_id], course_id: data[:course_id]
 				)
 
 				book.save

@@ -69,7 +69,7 @@ class Term
 		departments.each do |department|
 			# Pass the departments to the department model, which will then get the courses,
 			# => which will then get the sections, which will then get the books.
-			# => Convoluted?  Absolutely.  Necessary?  Unfortunately.
+			# => Convoluted?  Absolutely.  Necessary?  Potentially.
 			if department.is_a?(Hash)
 				Department.update_department department, self
 			end
