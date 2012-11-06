@@ -66,15 +66,19 @@ class Book
 		end
 		# Get the publisher of the book
 		doc.search("//td[@class='book-desc']/span[@class='book-meta book-publisher']").each do |publisher|
-			book[:publisher] = publisher.inner_html
+			book[:publisher] = publisher.inner_html.split('&nbsp;').join(' ')
 		end
 		# Get the required status of teh book
-		doc.search("//td[@class='book-desc']/span[@class='book-meta book-req']").each do |required|
+		doc.search("//td[@class='book-desc']/p[@class='book-req']").each do |required|
 			book[:required] = required.inner_html
 		end
 		# Get the copyright information for the book
 		doc.search("//td[@class='book-desc']/span[@class='book-meta book-copyright']").each do |copyright|
-			book[:copyright] = copyright.inner_html
+			book[:copyright] = copyright.inner_html.split('&nbsp;').join(' ')
+		end
+		# Get the UVa bookstore price for the book
+		doc.search("//dd[@class='list-price']/span[@class='book-price-list']").each do |price|
+			book[:price] = price.inner_html
 		end
 		# Return the book
 		book
