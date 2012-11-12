@@ -5,6 +5,9 @@ require 'sinatra'
 require 'mongoid'
 # Returning Json
 require 'json'
+require 'rack/contrib/jsonp'
+
+use Rack::JSONP
 
 # Configuration
 configure do
