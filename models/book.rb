@@ -45,59 +45,65 @@ class Book
 		print "Scraping URL: " + scraper.format_simple_url("section", data[:section_id]) + "\n"
 		doc = Hpricot(html)
 
-		if doc.search("//div[@class=error]").count == 0
-			book = Book.parse_book doc
+		if doc.search("//div[@class='error']").count == 0
+			doc.search("//tr[@class~='book']").each do |potential_book|
+				book = Book.parse_book potential_book
 
-			if Book.where(isbn: book[:isbn], section_id: data[:section_id]).count == 0 && book[:title] != "No Text Required"
-				book = Book.new(
-					# Book Data
-					title: book[:title], author: book[:author], isbn: book[:isbn], price: book[:price], 
-					copyright: book[:copyright], publisher: book[:publisher],
-					# Course Data
-					required: book[:required], department: data[:department], dept_abrev: data[:dept_abrev],
-					course_number: data[:course], section_number: data[:section], instructor: data[:instructor],
-					term: data[:term],
-					# Bookstore Data
-					section_id: data[:section_id], term_id: data[:term_id], campus_id: data[:campus_id],
-					department_id: data[:department_id], course_id: data[:course_id]
-				)
+				if book != false && !book[:title].nil? && Book.where(isbn: book[:isbn], section_id: data[:section_id]).count == 0 && book[:title] != "No Text Required"
+					book = Book.new(
+						# Book Data
+						title: book[:title], author: book[:author], isbn: book[:isbn], price: book[:price], 
+						copyright: book[:copyright], publisher: book[:publisher],
+						# Course Data
+						required: book[:required], department: data[:department], dept_abrev: data[:dept_abrev],
+						course_number: data[:course], section_number: data[:section], instructor: data[:instructor],
+						term: data[:term],
+						# Bookstore Data
+						section_id: data[:section_id], term_id: data[:term_id], campus_id: data[:campus_id],
+						department_id: data[:department_id], course_id: data[:course_id]
+					)
 
-				book.save
+					book.save
+				end
 			end
 		end
 	end
 
 	def self.parse_book doc
-		book = Hash.new
-		# Get the title of the book
-		doc.search("//td[@class='book-desc']/span[@class='book-title']").each do |title|
-			book[:title] = title.inner_html
+		if doc.search("//td[@class='book-desc'").count != 0
+			book = Hash.new
+			# Get the title of the book
+			doc.search("//td[@class='book-desc']/span[@class='book-title']").each do |title|
+				book[:title] = title.inner_html
+			end
+			# Get the author of the book
+			doc.search("//td[@class='book-desc']/span[@class='book-meta book-author']").each do |author|
+				book[:author] = author.inner_html
+			end
+			# Get the ISBN of the book
+			doc.search("//td[@class='book-desc']/span/span").each do |isbn|
+				book[:isbn] = isbn.inner_html
+			end
+			# Get the publisher of the book
+			doc.search("//td[@class='book-desc']/span[@class='book-meta book-publisher']").each do |publisher|
+				book[:publisher] = publisher.inner_html.split('&nbsp;').join(' ')
+			end
+			# Get the required status of teh book
+			doc.search("//td[@class='book-desc']/p[@class='book-req']").each do |required|
+				book[:required] = required.inner_html
+			end
+			# Get the copyright information for the book
+			doc.search("//td[@class='book-desc']/span[@class='book-meta book-copyright']").each do |copyright|
+				book[:copyright] = copyright.inner_html.split('&nbsp;').join(' ')
+			end
+			# Get the UVa bookstore price for the book
+			doc.search("//dd[@class='list-price']/span[@class='book-price-list']").each do |price|
+				book[:price] = price.inner_html
+			end
+			# Return the book
+			return book
 		end
-		# Get the author of the book
-		doc.search("//td[@class='book-desc']/span[@class='book-meta book-author']").each do |author|
-			book[:author] = author.inner_html
-		end
-		# Get the ISBN of the book
-		doc.search("//td[@class='book-desc']/span/span").each do |isbn|
-			book[:isbn] = isbn.inner_html
-		end
-		# Get the publisher of the book
-		doc.search("//td[@class='book-desc']/span[@class='book-meta book-publisher']").each do |publisher|
-			book[:publisher] = publisher.inner_html.split('&nbsp;').join(' ')
-		end
-		# Get the required status of teh book
-		doc.search("//td[@class='book-desc']/p[@class='book-req']").each do |required|
-			book[:required] = required.inner_html
-		end
-		# Get the copyright information for the book
-		doc.search("//td[@class='book-desc']/span[@class='book-meta book-copyright']").each do |copyright|
-			book[:copyright] = copyright.inner_html.split('&nbsp;').join(' ')
-		end
-		# Get the UVa bookstore price for the book
-		doc.search("//dd[@class='list-price']/span[@class='book-price-list']").each do |price|
-			book[:price] = price.inner_html
-		end
-		# Return the book
-		book
+
+		false
 	end
 end
