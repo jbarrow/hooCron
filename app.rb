@@ -44,8 +44,8 @@ get '/search' do
 	content_type :json
 	
 	# Check which parameters were passed, and grab the books based on that
-	if params[:department] && params[:course]
-		return Book.where( dept_abrev: params[:department].upcase, course_number: params[:course].to_i ).to_json
+	if params[:department] && params[:course] && params[:term]
+		return Book.where( dept_abrev: params[:department].upcase, course_number: params[:course].to_i, term_id: params[:term] ).to_json
 	elsif params[:title]
 		# Search each of the fields
 	end
