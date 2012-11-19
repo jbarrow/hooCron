@@ -14,10 +14,20 @@ namespace :hooscron do
 
 	task :update_terms do
 		n = Time.now
-		if n.day == 15
+		if n.day%3 == 0
 			Term.update_terms
 		else
 			print "Wrong day\n\n"
+		end
+	end
+
+	task :clear_database do
+		n = Time.now
+		# Clear the books on June 15 of every year
+		if n.day == 15 && n.month == 6
+			Book.clear_books
+		else
+			print "Wrong day to clear entire database\n\n"
 		end
 	end
 end

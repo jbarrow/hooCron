@@ -106,4 +106,14 @@ class Book
 
 		false
 	end
+
+	def self.delete_books
+		Book.each do |book|
+			book.destroy
+		end
+
+		Term.each do |term|
+			term.destroy
+		end
+	end
 end
