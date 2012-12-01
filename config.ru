@@ -1,9 +1,12 @@
 require 'sinatra'
 require 'rack/contrib/jsonp'
+require 'bundler'
 
+Bundler.require
 use Rack::JSONP
 
 # Models
+
 require './models/scraper'
 require './models/department'
 require './models/book'
