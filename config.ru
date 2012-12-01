@@ -11,4 +11,6 @@ require './models/term'
 # Application
 require './app'
 
+use HireFireApp::Middleware
+
 run Sinatra::Application
