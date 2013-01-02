@@ -14,10 +14,6 @@ configure do
 	Mongoid.load!("config/mongoid.yml")
 end
 
-configure :production do
-  require 'newrelic_rpm'
-end
-
 # API Calls
 get '/terms' do
 	# Returns the available terms: fall, semester @ sea, etc.
