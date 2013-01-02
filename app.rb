@@ -52,7 +52,7 @@ get '/search' do
 			return Book.where( dept_abrev: params[:department].upcase, course_number: params[:course].to_i ).to_json
 		end
 	elsif params[:isbn]
-		return Book.where( isbn: params[:isbn] ).to_json
+		return [Book.where( isbn: params[:isbn] ).first].to_json
 	end
 
 	Book.new().to_json
