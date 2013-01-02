@@ -55,8 +55,8 @@ get '/search' do
 		else
 			return Book.where( dept_abrev: params[:department].upcase, course_number: params[:course].to_i ).to_json
 		end
-	elsif params[:title]
-		# Search each of the fields
+	elsif params[:isbn]
+		return Book.where( isbn: params[:isbn] ).to_json
 	end
 
 	Book.new().to_json

@@ -6,6 +6,7 @@ gem "mongoid", git: "git://github.com/mongoid/mongoid.git"
 gem 'rack-contrib'
 gem 'hpricot'
 gem 'crack'
+gem 'delayed_job'
 gem 'rest-client'
 gem 'newrelic_rpm'
 gem 'hirefireapp'
